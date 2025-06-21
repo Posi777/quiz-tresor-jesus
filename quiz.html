@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Biblique pour Enfants</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Sans MS', 'Segoe UI', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            color: #333;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .header {
+            background: linear-gradient(to right, #4b6cb7, #182848);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .header h1 {
+            font-size: 1.8rem;
+            margin: 0 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .mascot {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        
+        .mascot i {
+            font-size: 40px;
+            color: #4b6cb7;
+        }
+        
+        .level-selector {
+            padding: 20px 15px;
+            text-align: center;
+            background: #f9f9f9;
+        }
+        
+        .level-selector h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+        
+        .level-info {
+            background: #e3f2fd;
+            border-radius: 12px;
+            padding: 12px;
+            margin: 0 auto 20px;
+            max-width: 600px;
+            font-size: 1rem;
+            color: #1a237e;
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.1);
+        }
+        
+        .levels {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .level-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(to bottom, #4b6cb7, #182848);
+            color: white;
+            border: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .level-btn:hover {
+            transform: translateY(-5px) scale(1.1);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+        }
+        
+        .quiz-container {
+            display: none;
+            padding: 20px;
+        }
+        
+        .progress-container {
+            margin-bottom: 20px;
+        }
+        
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .level-indicator {
+            background: #e3f2fd;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            color: #1a237e;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            font-size: 0.9rem;
+        }
+        
+        .progress-bar-container {
+            height: 18px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, #4b6cb7, #182848);
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .question-container {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            position: relative;
+            border: 2px solid #e0e7ff;
+        }
+        
+        .question-image {
+            max-width: 100%;
+            height: 180px;
+            border-radius: 10px;
+            margin: 0 auto 15px;
+            display: block;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-style: italic;
+            font-size: 0.9rem;
+        }
+        
+        .question-text {
+            font-size: 1.2rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+            line-height: 1.4;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        
+        .option-btn {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            background: #f9f9f9;
+            cursor: pointer;
+            font-size: 1rem;
+            text-align: left;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+        
+        .option-btn:hover {
+            background: #e3f2fd;
+            border-color: #4b6cb7;
+        }
+        
+        .option-btn .option-letter {
+            width: 28px;
+            height: 28px;
+            background: #4b6cb7;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-weight: bold;
+            flex-shrink: 0;
+            font-size: 0.9rem;
+        }
+        
+        .option-btn.correct {
+            background: #e8f5e9;
+            border-color: #4caf50;
+            color: #2e7d32;
+        }
+        
+        .option-btn.incorrect {
+            background: #ffebee;
+            border-color: #f44336;
+            color: #c62828;
+        }
+        
+        .option-btn.disabled {
+            background: #f5f5f5;
+            color: #9e9e9e;
+            cursor: not-allowed;
+            border-color: #e0e0e0;
+        }
+        
+        .feedback {
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 15px 0;
+            transition: all 0.3s ease;
+            padding: 5px;
+        }
+        
+        .feedback.correct {
+            color: #4caf50;
+            animation: bounce 0.5s;
+        }
+        
+        .feedback.incorrect {
+            color: #f44336;
+        }
+        
+        .completion-screen {
+            display: none;
+            padding: 30px 15px;
+            text-align: center;
+            background: linear-gradient(to bottom, #e3f2fd, #f9f9f9);
+            position: relative;
+            overflow: hidden;
+            min-height: 300px;
+        }
+        
+        .completion-message {
+            font-size: 1.8rem;
+            color: #1a237e;
+            margin-bottom: 20px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            z-index: 10;
+            position: relative;
+        }
+        
+        .score-display {
+            font-size: 1.8rem;
+            margin: 15px 0;
+            color: #4b6cb7;
+            font-weight: bold;
+            z-index: 10;
+            position: relative;
+        }
+        
+        .best-score {
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            color: #2c3e50;
+            font-weight: bold;
+            z-index: 10;
+            position: relative;
+        }
+        
+        .actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            z-index: 10;
+            position: relative;
+        }
+        
+        .action-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .action-btn.replay {
+            background: linear-gradient(to right, #4caf50, #2e7d32);
+            color: white;
+        }
+        
+        .action-btn.continue {
+            background: linear-gradient(to right, #2196f3, #0d47a1);
+            color: white;
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            animation: fall linear forwards;
+            z-index: 1;
+        }
+        
+        .firework {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            animation: explode 1s forwards;
+            z-index: 1;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+        
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes explode {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) scale(0);
+                opacity: 0;
+            }
+        }
+        
+        .difficulty-label {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #1a237e;
+            background: #e3f2fd;
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 8px;
+        }
+        
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .mascot {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .mascot i {
+                font-size: 30px;
+            }
+            
+            .question-text {
+                font-size: 1.1rem;
+            }
+            
+            .option-btn {
+                font-size: 0.9rem;
+                padding: 10px;
+            }
+            
+            .completion-message {
+                font-size: 1.5rem;
+            }
+            
+            .score-display {
+                font-size: 1.5rem;
+            }
+            
+            .action-btn {
+                padding: 10px 20px;
+                font-size: 1rem;
+            }
+            
+            .level-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="mascot">
+                <i class="fas fa-dove"></i>
+            </div>
+            <h1>Quiz Biblique pour Enfants</h1>
+            <div class="mascot">
+                <i class="fas fa-bible"></i>
+            </div>
+        </div>
+        
+        <div class="level-selector" id="level-selector">
+            <h2>Choisis ton niveau</h2>
+            <div class="level-info">
+                <p>Chaque niveau a 12 questions avec une difficulté croissante</p>
+                <div class="difficulty-label">Niveau 1-3: Facile | Niveau 4-6: Intermédiaire | Niveau 7-8: Expert | Niveau 9-10: Légende</div>
+            </div>
+            <div class="levels">
+                <button class="level-btn" onclick="startLevel(1)">1</button>
+                <button class="level-btn" onclick="startLevel(2)">2</button>
+                <button class="level-btn" onclick="startLevel(3)">3</button>
+                <button class="level-btn" onclick="startLevel(4)">4</button>
+                <button class="level-btn" onclick="startLevel(5)">5</button>
+                <button class="level-btn" onclick="startLevel(6)">6</button>
+                <button class="level-btn" onclick="startLevel(7)">7</button>
+                <button class="level-btn" onclick="startLevel(8)">8</button>
+                <button class="level-btn" onclick="startLevel(9)">9</button>
+                <button class="level-btn" onclick="startLevel(10)">10</button>
+            </div>
+        </div>
+        
+        <div class="quiz-container" id="quiz-area">
+            <div class="progress-container">
+                <div class="progress-header">
+                    <div class="level-indicator" id="level-indicator">Niveau 1: Très Facile</div>
+                    <div id="score">Question 1/12</div>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+            </div>
+            
+            <div class="question-container">
+                <!-- Emplacement pour les images -->
+                <div class="question-image" id="question-image">
+                    <i class="fas fa-image"></i> [Image liée à la question]
+                </div>
+                <div class="question-text" id="question"></div>
+                <div class="options" id="options"></div>
+            </div>
+            
+            <div class="feedback" id="feedback"></div>
+        </div>
+        
+        <div class="completion-screen" id="completion-screen">
+            <div class="completion-message">Félicitations, tu as terminé le niveau !</div>
+            <div class="score-display" id="score-display">Score: 0/12</div>
+            <div class="best-score" id="best-score">Meilleur score: 0/12</div>
+            <div class="actions">
+                <button class="action-btn replay" onclick="restartLevel()">
+                    <i class="fas fa-redo"></i> Rejouer
+                </button>
+                <button class="action-btn continue" onclick="nextLevel()">
+                    <i class="fas fa-arrow-right"></i> Continuer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Libellés de difficulté
+        const difficultyLabels = {
+            1: "Facile",
+            2: "Facile",
+            3: "Facile",
+            4: "Intermédiaire",
+            5: "Intermédiaire",
+            6: "Intermédiaire",
+            7: "Expert",
+            8: "Expert",
+            9: "Légende",
+            10: "Légende"
+        };
+        
+        // Données du quiz par niveau
+        const quizData = {
+            1: {
+                description: "Niveau 1 (3-6 ans) - Histoires très simples",
+                questions: [
+                    {
+                        question: "Qui a construit une grande arche ?",
+                        options: ["Moïse", "Noé", "David"],
+                        answer: 1
+                    },
+                    {
+                        question: "Quel fruit Ève a-t-elle mangé dans le jardin d'Éden ?",
+                        options: ["Une orange", "Une pomme", "Une banane"],
+                        answer: 1
+                    },
+                    {
+                        question: "Qui a été jeté dans la fosse aux lions mais sauvé par Dieu ?",
+                        options: ["Daniel", "Joseph", "Jonas"],
+                        answer: 0
+                    },
+                    {
+                        question: "Comment s'appellent les premiers hommes créés par Dieu ?",
+                        options: ["Pierre et Paul", "Adam et Ève", "Abraham et Sarah"],
+                        answer: 1
+                    },
+                    {
+                        question: "Qui a conduit les Israélites à travers la mer Rouge ?",
+                        options: ["Jésus", "Moïse", "David"],
+                        answer: 1
+                    },
+                    {
+                        question: "Où Jésus est-il né ?",
+                        options: ["Jérusalem", "Bethléem", "Nazareth"],
+                        answer: 1
+                    },
+                    {
+                        question: "Qui a été avalé par un grand poisson ?",
+                        options: ["Pierre", "Jonas", "Paul"],
+                        answer: 1
+                    },
+                    {
+                        question: "Qui a tué le géant Goliath ?",
+                        options: ["Samson", "David", "Salomon"],
+                        answer: 1
+                    },
+                    {
+                        question: "Quel est le premier livre de la Bible ?",
+                        options: ["Exode", "Genèse", "Psaumes"],
+                        answer: 1
+                    },
+                    {
+                        question: "Qui a construit un grand bateau ?",
+                        options: ["Moïse", "Noé", "Jacob"],
+                        answer: 1
+                    },
+                    {
+                        question: "Combien de disciples Jésus avait-il ?",
+                        options: ["7", "10", "12"],
+                        answer: 2
+                    },
+                    {
+                        question: "Qui est la mère de Jésus ?",
+                        options: ["Élisabeth", "Marie", "Ruth"],
+                        answer: 1
+                    }
+                ]
+            },
+            2: {
+                description: "Niveau 2 (4-7 ans) - Histoires simples",
+                questions: [
+                    {
+                        question: "Qui a rêvé d'une échelle qui montait au ciel ?",
+                        options: ["Joseph", "Jacob", "Jésus"],
+                        answer: 1
+                    },
+                    {
+                        question: "Qui a été vendu comme esclave par ses frères ?",
+                        options: ["Moïse", "Joseph", "David"],
+                        answer: 1
+                    },
+                    {
+                        question: "Quel animal a parlé à Balaam ?",
+                        options: ["Un serpent", "Un âne", "Un lion"],
+                        answer: 1
+                    },
+                    {
+                        question: "Qui a été sauvé des eaux dans un panier ?",
+                        options: ["Jésus", "Moïse", "Samuel"],
+                        answer: 1
+                    },
+                    {
+                        question: "Qui a reçu les 10 commandements sur le mont Sinaï ?",
+                        options: ["Abraham", "Moïse", "Aaron"],
+                        answer: 1
+                    },
+                    {
+                        question: "Qui a nourri une grande foule avec 5 pains et 2 poissons ?",
+                        options: ["Élie", "Jésus", "Pierre"],
+                        answer: 1
+                    },
+                    {
+                        question: "Qui a construit le temple de Jérusalem ?",
+                        options: ["David", "Salomon", "Saül"],
+                        answer: 1
+                    },
+                    {
+                        question: "Qui a été transformé en statue de sel ?",
+                        options: ["La femme de Noé", "La femme de Lot", "La fille de Pharaon"],
+                        answer: 1
+                    },
+                    {
+                        question: "Qui a été le premier roi d'Israël ?",
+                        options: ["David", "Saül", "Salomon"],
+                        answer: 1
+                    },
+                    {
+                        question: "Qui a dit : 'Me voici' quand Dieu l'a appelé ?",
+                        options: ["Samuel", "Moïse", "Abraham"],
+                        answer: 0
+                    },
+                    {
+                        question: "Qui a été le plus fort homme de la Bible ?",
+                        options: ["Goliath", "Samson", "David"],
+                        answer: 1
+                    },
+                    {
+                        question: "Qui a écrit beaucoup de psaumes ?",
+                        options: ["Salomon", "David", "Moïse"],
+                        answer: 1
+                    }
+                ]
+            },
+            3: {
+                description: "Niveau 3 (5-8 ans)",
+                questions: [
+                    {
+                        question: "Quel était le métier de Joseph, le père de Jésus ?",
+                        options: ["Pêcheur", "Charpentier", "Médecin"],
+                        answer: 1
+                    },
+                    {
+                        question: "Quel est le nom de la montagne où Moïse a reçu les dix commandements ?",
+                        options: ["Mont Sinaï", "Mont des Oliviers", "Mont Carmel"],
+                        answer: 0
+                    },
+                    {
+                        question: "Combien de jours et de nuits a-t-il plu pendant le déluge ?",
+                        options: ["20 jours et 20 nuits", "30 jours et 30 nuits", "40 jours et 40 nuits"],
+                        answer: 2
+                    },
+                    {
+                        question: "Qui a été changé en statue de sel ?",
+                        options: ["La femme de Lot", "La femme de Noé", "La fille de Pharaon"],
+                        answer: 0
+                    },
+                    {
+                        question: "Qui a traversé la mer Rouge à pied sec ?",
+                        options: ["David et ses soldats", "Moïse et les Israélites", "Jésus et ses disciples"],
+                        answer: 1
+                    },
+                    {
+                        question: "Qui a été le premier martyr chrétien ?",
+                        options: ["Pierre", "Paul", "Étienne"],
+                        answer: 2
+                    },
+                    {
+                        question: "Qui a été le premier homme à naître sur la terre ?",
+                        options: ["Abel", "Caïn", "Seth"],
+                        answer: 1
+                    },
+                    {
+                        question: "Quel est le plus long livre de la Bible ?",
+                        options: ["Genèse", "Psaumes", "Jérémie"],
+                        answer: 1
+                    },
+                    {
+                        question: "Qui a été le premier grand prêtre d'Israël ?",
+                        options: ["Aaron", "Moïse", "Éli"],
+                        answer: 0
+                    },
+                    {
+                        question: "Quel prophète a été enlevé au ciel ?",
+                        options: ["Élie", "Élisée", "Ésaïe"],
+                        answer: 0
+                    },
+                    {
+                        question: "Qui a été le juge qui a combattu contre les Madianites avec seulement 300 hommes ?",
+                        options: ["Samson", "Gédéon", "Samson"],
+                        answer: 1
+                    },
+                    {
+                        question: "Quel est le nom de la femme qui est revenue avec Naomi à Bethléem ?",
+                        options: ["Orpa", "Ruth", "Rachel"],
+                        answer: 1
+                    }
+                ]
+            },
+            4: {
+                description: "Niveau 4 (6-9 ans)",
+                questions: [
+                    {
+                        question: "Quel est le nom du frère de Moïse ?",
+                        options: ["Aaron", "Josué", "Caleb"],
+                        answer: 0
+                    },
+                    {
+                        question: "Qui a été le premier roi d'Israël ?",
+                        options: ["David", "Saül", "Salomon"],
+                        answer: 1
+                    },
+                    {
+                        question: "Quel est le nom du jardin où Adam et Ève vivaient ?",
+                        options: ["Gethsémani", "Jardin d'Éden", "Jardin de la délivrance"],
+                        answer: 1
+                    },
+                    {
+                        question: "Quel est le premier miracle de Jésus ?",
+                        options: ["Guérison d'un aveugle", "Résurrection de Lazare", "Eau changée en vin"],
+                        answer: 2
+                    },
+                    {
+                        question: "Quel disciple a marché sur l'eau avec Jésus ?",
+                        options: ["Jacques", "Jean", "Pierre"],
+                        answer: 2
+                    },
+                    {
+                        question: "Quel est le nom du fils d'Abraham qui a été offert en sacrifice ?",
+                        options: ["Ismaël", "Isaac", "Jacob"],
+                        answer: 1
+                    },
+                    {
+                        question: "Qui a été le plus jeune fils de Jacob ?",
+                        options: ["Joseph", "Benjamin", "Ruben"],
+                        answer: 1
+                    },
+                    {
+                        question: "Qui a été jeté dans la fosse aux lions ?",
+                        options: ["Joseph", "Daniel", "Jérémie"],
+                        answer: 1
+                    },
+                    {
+                        question: "Qui a été le père de Jean-Baptiste ?",
+                        options: ["Zacharie", "Joseph", "Joachim"],
+                        answer: 0
+                    },
+                    {
+                        question: "Quel est le nom de la mer que Moïse a traversée ?",
+                        options: ["Mer Morte", "Mer Rouge", "Mer de Galilée"],
+                        answer: 1
+                    },
+                    {
+                        question: "Qui a été vendu pour 20 pièces d'argent ?",
+                        options: ["Jésus", "Joseph", "Moïse"],
+                        answer: 1
+                    },
+                    {
+                        question: "Qui a dit : 'Voici l'Agneau de Dieu' ?",
+                        options: ["Pierre", "Jean-Baptiste", "André"],
+                        answer: 1
+                    }
+                ]
+            },
+            5: {
+                description: "Niveau 5 (7-10 ans)",
+                questions: [
+                    {
+                        question: "Quel est le nom de l'apôtre qui a remplacé Judas ?",
+                        options: ["Matthias", "Paul", "Barnabas"],
+                        answer: 0
+                    },
+                    {
+                        question: "Quel est le plus court verset de la Bible ?",
+                        options: ["Jésus pleura", "Aimez-vous les uns les autres", "Dieu est amour"],
+                        answer: 0
+                    },
+                    {
+                        question: "Qui a écrit le livre de l'Apocalypse ?",
+                        options: ["Pierre", "Paul", "Jean"],
+                        answer: 2
+                    },
+                    {
+                        question: "Qui a été le premier disciple appelé par Jésus ?",
+                        options: ["Pierre", "André", "Jean"],
+                        answer: 1
+                    },
+                    {
+                        question: "Quel est le nom de la femme qui a lavé les pieds de Jésus avec ses larmes ?",
+                        options: ["Marie de Béthanie", "Marie-Madeleine", "La femme adultère"],
+                        answer: 1
+                    },
+                    {
+                        question: "Quel est le nom du roi qui a ordonné le massacre des innocents ?",
+                        options: ["Hérode", "Ponce Pilate", "César Auguste"],
+                        answer: 0
+                    },
+                    {
+                        question: "Qui a été le premier martyr parmi les apôtres ?",
+                        options: ["Pierre", "Paul", "Jacques"],
+                        answer: 2
+                    },
+                    {
+                        question: "Quel est le nom de l'apôtre qui était collecteur d'impôts ?",
+                        options: ["Matthieu", "Thomas", "Philippe"],
+                        answer: 0
+                    },
+                    {
+                        question: "Qui a été le prophète qui a été jeté dans la citerne ?",
+                        options: ["Jérémie", "Ésaïe", "Ézéchiel"],
+                        answer: 0
+                    },
+                    {
+                        question: "Quel est le nom de l'île où Jean a été exilé ?",
+                        options: ["Patmos", "Malte", "Chypre"],
+                        answer: 0
+                    },
+                    {
+                        question: "Qui a été le père de Joseph, l'époux de Marie ?",
+                        options: ["Jacob", "Héli", "Joachim"],
+                        answer: 0
+                    },
+                    {
+                        question: "Quel est le nom du serviteur d'Abraham qui a cherché une femme pour Isaac ?",
+                        options: ["Éliézer", "Lot", "Melchisédek"],
+                        answer: 0
+                    }
+                ]
+            },
+            6: {
+                description: "Niveau 6 (8-11 ans)",
+                questions: [
+                    {
+                        question: "Quel est le nom de la vallée où David a combattu Goliath ?",
+                        options: ["Vallée du Jourdain", "Vallée d'Elah", "Vallée de Josaphat"],
+                        answer: 1
+                    },
+                    {
+                        question: "Qui a été la première femme mentionnée dans la Bible ?",
+                        options: ["Ève", "Sarah", "Lilith"],
+                        answer: 0
+                    },
+                    {
+                        question: "Quel est le nom du livre qui raconte l'histoire de l'Église primitive ?",
+                        options: ["Les Actes des Apôtres", "Les Épîtres de Paul", "L'Apocalypse"],
+                        answer: 0
+                    },
+                    {
+                        question: "Qui a été le roi qui a construit le premier temple ?",
+                        options: ["David", "Salomon", "Roboam"],
+                        answer: 1
+                    },
+                    {
+                        question: "Combien de personnes sont montées dans l'arche de Noé ?",
+                        options: ["4", "8", "12"],
+                        answer: 1
+                    },
+                    {
+                        question: "Quel est le nom de la femme de Job ?",
+                        options: ["Ruth", "Esther", "Elle n'est pas nommée"],
+                        answer: 2
+                    },
+                    {
+                        question: "Qui a été le dernier juge d'Israël ?",
+                        options: ["Gédéon", "Samson", "Samuel"],
+                        answer: 2
+                    },
+                    {
+                        question: "Quel prophète a épousé une prostituée ?",
+                        options: ["Osée", "Amos", "Jérémie"],
+                        answer: 0
+                    },
+                    {
+                        question: "Qui a été le pharisien qui est venu voir Jésus de nuit ?",
+                        options: ["Nicodème", "Saül", "Gamaliel"],
+                        answer: 0
+                    },
+                    {
+                        question: "Quel est le nom de la mère de Samuel ?",
+                        options: ["Anne", "Élisabeth", "Débora"],
+                        answer: 0
+                    },
+                    {
+                        question: "Qui a été le premier roi de Juda après la division du royaume ?",
+                        options: ["Roboam", "Jéroboam", "Achab"],
+                        answer: 0
+                    },
+                    {
+                        question: "Quel est le nom du prophète qui a été enlevé au ciel dans un char de feu ?",
+                        options: ["Élie", "Élisée", "Ésaïe"],
+                        answer: 0
+                    }
+                ]
+            },
+            7: {
+                description: "Niveau 7 (9-12 ans)",
+                questions: [
+                    {
+                        question: "Qui a écrit l'épître aux Hébreux ?",
+                        options: ["Paul", "Pierre", "Auteur inconnu"],
+                        answer: 2
+                    },
+                    {
+                        question: "Quel est le nom de la mère de Jean-Baptiste ?",
+                        options: ["Élisabeth", "Marie", "Anne"],
+                        answer: 0
+                    },
+                    {
+                        question: "Quel est le nom du lieu où Jésus a été crucifié ?",
+                        options: ["Golgotha", "Gethsémani", "Calvaire"],
+                        answer: 0
+                    },
+                    {
+                        question: "Qui a été le prophète qui a prédit la naissance de Jésus à Bethléem ?",
+                        options: ["Ésaïe", "Michée", "Jérémie"],
+                        answer: 1
+                    },
+                    {
+                        question: "Quel est le nom du disciple qui a trahi Jésus ?",
+                        options: ["Jude", "Judas Iscariot", "Thomas"],
+                        answer: 1
+                    },
+                    {
+                        question: "Quel est le nom du livre qui raconte la création du monde ?",
+                        options: ["Exode", "Genèse", "Job"],
+                        answer: 1
+                    },
+                    {
+                        question: "Qui a été le roi qui a fait jeter Daniel dans la fosse aux lions ?",
+                        options: ["Nebucadnetsar", "Darius", "Cyrus"],
+                        answer: 1
+                    },
+                    {
+                        question: "Quel est le nom de la femme qui a caché les espions à Jéricho ?",
+                        options: ["Rahab", "Ruth", "Deborah"],
+                        answer: 0
+                    },
+                    {
+                        question: "Qui a été le père de Salomon ?",
+                        options: ["Saül", "David", "Salomon"],
+                        answer: 1
+                    },
+                    {
+                        question: "Quel est le nom de la mer où Jésus a marché sur l'eau ?",
+                        options: ["Mer Rouge", "Mer Morte", "Mer de Galilée"],
+                        answer: 2
+                    },
+                    {
+                        question: "Qui a été le premier grand prêtre ?",
+                        options: ["Aaron", "Melchisédek", "Éli"],
+                        answer: 0
+                    },
+                    {
+                        question: "Quel est le nom de la montagne où Abraham a offert Isaac en sacrifice ?",
+                        options: ["Mont Morija", "Mont Sinaï", "Mont Nebo"],
+                        answer: 0
+                    }
+                ]
+            },
+            8: {
+                description: "Niveau 8 (10-13 ans)",
+                questions: [
+                    {
+                        question: "Quel est le nom de la femme de Caïn ?",
+                        options: ["Awan", "Luluwa", "La Bible ne le dit pas"],
+                        answer: 2
+                    },
+                    {
+                        question: "Qui a été le premier homme à mourir dans la Bible ?",
+                        options: ["Abel", "Caïn", "Seth"],
+                        answer: 0
+                    },
+                    {
+                        question: "Combien de livres y a-t-il dans la Bible protestante ?",
+                        options: ["66", "73", "76"],
+                        answer: 0
+                    },
+                    {
+                        question: "Qui a écrit l'épître de Jude ?",
+                        options: ["Jude, frère de Jacques", "Jude l'apôtre", "Jude Barsabbas"],
+                        answer: 0
+                    },
+                    {
+                        question: "Quel est le nom du prophète qui a été jeté dans une citerne ?",
+                        options: ["Jérémie", "Ézéchiel", "Daniel"],
+                        answer: 0
+                    },
+                    {
+                        question: "Qui a été le roi qui a fait reconstruire le temple ?",
+                        options: ["Zorobabel", "Hérode le Grand", "Cyrus"],
+                        answer: 1
+                    },
+                    {
+                        question: "Quel est le nom du fleuve où Naaman a été guéri ?",
+                        options: ["Le Jourdain", "Le Tigre", "L'Euphrate"],
+                        answer: 0
+                    },
+                    {
+                        question: "Qui a été le premier empereur romain mentionné dans la Bible ?",
+                        options: ["Auguste", "Tibère", "Néron"],
+                        answer: 0
+                    },
+                    {
+                        question: "Quel est le nom de la ville où Jésus a grandi ?",
+                        options: ["Bethléem", "Nazareth", "Capernaüm"],
+                        answer: 1
+                    },
+                    {
+                        question: "Qui a été le prophète qui a été mangé par un grand poisson ?",
+                        options: ["Jonas", "Job", "Joël"],
+                        answer: 0
+                    },
+                    {
+                        question: "Quel est le nom du disciple qui a renié Jésus trois fois ?",
+                        options: ["Pierre", "Judas", "Thomas"],
+                        answer: 0
+                    },
+                    {
+                        question: "Qui a été le père de Moïse ?",
+                        options: ["Amram", "Kehath", "Lévi"],
+                        answer: 0
+                    }
+                ]
+            },
+            9: {
+                description: "Niveau 9 (11-14 ans)",
+                questions: [
+                    {
+                        question: "Qui a été le roi qui a écrit le livre de l'Ecclésiaste ?",
+                        options: ["David", "Salomon", "Roboam"],
+                        answer: 1
+                    },
+                    {
+                        question: "Quel est le nom de la femme qui a été la première à voir Jésus ressuscité ?",
+                        options: ["Marie-Madeleine", "Marie mère de Jésus", "Marthe"],
+                        answer: 0
+                    },
+                    {
+                        question: "Qui a été le prophète qui a vu une roue dans une roue ?",
+                        options: ["Ézéchiel", "Daniel", "Zacharie"],
+                        answer: 0
+                    },
+                    {
+                        question: "Quel est le nom de la mère de Samuel ?",
+                        options: ["Anne", "Hannah", "Les deux réponses sont correctes"],
+                        answer: 2
+                    },
+                    {
+                        question: "Qui a été le père de Jean-Baptiste ?",
+                        options: ["Zacharie", "Élisée", "Siméon"],
+                        answer: 0
+                    },
+                    {
+                        question: "Quel est le nom du livre qui contient la prière de Jabets ?",
+                        options: ["1 Chroniques", "Psaumes", "Proverbes"],
+                        answer: 0
+                    },
+                    {
+                        question: "Qui a été le premier grand prêtre du temple reconstruit ?",
+                        options: ["Josué", "Zorobabel", "Esdras"],
+                        answer: 0
+                    },
+                    {
+                        question: "Quel est le nom de la femme de Boaz ?",
+                        options: ["Naomi", "Ruth", "Orpa"],
+                        answer: 1
+                    },
+                    {
+                        question: "Qui a été le prophète qui a défié les prophètes de Baal ?",
+                        options: ["Élie", "Élisée", "Amos"],
+                        answer: 0
+                    },
+                    {
+                        question: "Quel est le nom de la ville où Paul est né ?",
+                        options: ["Tarse", "Antioche", "Jérusalem"],
+                        answer: 0
+                    },
+                    {
+                        question: "Qui a été le disciple que Jésus aimait ?",
+                        options: ["Pierre", "Jean", "Jacques"],
+                        answer: 1
+                    },
+                    {
+                        question: "Quel est le nom du livre qui suit les Proverbes dans l'Ancien Testament ?",
+                        options: ["Ecclésiaste", "Cantique des cantiques", "Job"],
+                        answer: 0
+                    }
+                ]
+            },
+            10: {
+                description: "Niveau 10 (12-15 ans) - Questions difficiles",
+                questions: [
+                    {
+                        question: "Quel livre de la Bible contient l'histoire de la Tour de Babel ?",
+                        options: ["Exode", "Genèse", "Lévitique"],
+                        answer: 1
+                    },
+                    {
+                        question: "Qui a écrit la majorité des Psaumes ?",
+                        options: ["Salomon", "David", "Moïse"],
+                        answer: 1
+                    },
+                    {
+                        question: "Quel apôtre a renié Jésus trois fois ?",
+                        options: ["Pierre", "Jean", "Judas"],
+                        answer: 0
+                    },
+                    {
+                        question: "Quel prophète a été enlevé au ciel dans un char de feu ?",
+                        options: ["Élie", "Élisée", "Jérémie"],
+                        answer: 0
+                    },
+                    {
+                        question: "Quel roi a eu un songe interprété par Daniel ?",
+                        options: ["Nebucadnetsar", "Darius", "Cyrus"],
+                        answer: 0
+                    },
+                    {
+                        question: "Quelle est la dernière phrase de la Bible (Apocalypse) ?",
+                        options: ["Que la paix soit avec vous", "Viens, Seigneur Jésus", "Allez dans le monde entier"],
+                        answer: 1
+                    },
+                    {
+                        question: "Combien de livres compte la Bible protestante ?",
+                        options: ["66", "73", "81"],
+                        answer: 0
+                    },
+                    {
+                        question: "Qui était le père de Jean-Baptiste ?",
+                        options: ["Joseph", "Zacharie", "Simon"],
+                        answer: 1
+                    },
+                    {
+                        question: "Quel livre vient immédiatement après les Actes des Apôtres ?",
+                        options: ["Romains", "Hébreux", "Jacques"],
+                        answer: 0
+                    },
+                    {
+                        question: "Qui a dit : 'Il faut qu'il croisse et que je diminue' ?",
+                        options: ["Paul", "Jean-Baptiste", "Pierre"],
+                        answer: 1
+                    },
+                    {
+                        question: "Quel est le plus court verset de la Bible ?",
+                        options: ["Jésus pleura", "Aimez-vous les uns les autres", "Dieu est amour"],
+                        answer: 0
+                    },
+                    {
+                        question: "Qui a accompagné Paul dans la plupart de ses voyages missionnaires ?",
+                        options: ["Timothée", "Barnabas", "Silas"],
+                        answer: 0
+                    }
+                ]
+            }
+        };
+
+        // Variables d'état
+        let currentLevel = 1;
+        let currentQuestion = 0;
+        let questions = [];
+        let score = 0;
+        let bestScores = JSON.parse(localStorage.getItem('bibleQuizBestScores')) || {};
+
+        // Éléments DOM
+        const levelSelector = document.getElementById('level-selector');
+        const quizArea = document.getElementById('quiz-area');
+        const questionElement = document.getElementById('question');
+        const optionsElement = document.getElementById('options');
+        const feedbackElement = document.getElementById('feedback');
+        const progressBar = document.getElementById('progress-bar');
+        const scoreElement = document.getElementById('score');
+        const completionScreen = document.getElementById('completion-screen');
+        const levelIndicator = document.getElementById('level-indicator');
+        const questionImage = document.getElementById('question-image');
+        const scoreDisplay = document.getElementById('score-display');
+        const bestScoreDisplay = document.getElementById('best-score');
+
+        // Démarrer un niveau
+        function startLevel(level) {
+            currentLevel = level;
+            currentQuestion = 0;
+            score = 0;
+            questions = [...quizData[level].questions];
+            shuffleArray(questions); // Mélanger les questions
+            
+            levelSelector.style.display = 'none';
+            quizArea.style.display = 'block';
+            completionScreen.style.display = 'none';
+            
+            // Mettre à jour l'indicateur de niveau
+            levelIndicator.textContent = `Niveau ${level}: ${difficultyLabels[level]}`;
+            
+            showQuestion();
+        }
+
+        // Afficher la question actuelle
+        function showQuestion() {
+            const question = questions[currentQuestion];
+            questionElement.textContent = question.question;
+            
+            // Réinitialiser le feedback
+            feedbackElement.textContent = "";
+            feedbackElement.className = "feedback";
+            
+            // Effacer les options précédentes
+            optionsElement.innerHTML = '';
+            
+            // Ajouter les nouvelles options
+            const letters = ['A', 'B', 'C'];
+            question.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = 'option-btn';
+                button.innerHTML = `<div class="option-letter">${letters[index]}</div>${option}`;
+                button.onclick = () => checkAnswer(index);
+                optionsElement.appendChild(button);
+            });
+            
+            // Mettre à jour la barre de progression
+            progressBar.style.width = `${(currentQuestion / questions.length) * 100}%`;
+            scoreElement.textContent = `Question ${currentQuestion + 1}/${questions.length}`;
+            
+            // Emplacement pour les images (à compléter avec vos images)
+            questionImage.innerHTML = `<i class="fas fa-image"></i> [Image: ${question.question.substring(0, 20)}...]`;
+        }
+
+        // Vérifier la réponse
+        function checkAnswer(selectedIndex) {
+            const question = questions[currentQuestion];
+            const options = document.querySelectorAll('.option-btn');
+            
+            // Désactiver tous les boutons
+            options.forEach(btn => {
+                btn.onclick = null;
+                btn.classList.add('disabled');
+            });
+            
+            // Marquer la bonne réponse en vert
+            options[question.answer].classList.add('correct');
+            
+            if (selectedIndex === question.answer) {
+                // Bonne réponse
+                score++;
+                feedbackElement.textContent = "Bravo !";
+                feedbackElement.className = "feedback correct";
+                
+                // Passer à la question suivante après un délai
+                setTimeout(() => {
+                    nextQuestion();
+                }, 1500);
+            } else {
+                // Mauvaise réponse
+                options[selectedIndex].classList.add('incorrect');
+                feedbackElement.textContent = "Dommage !";
+                feedbackElement.className = "feedback incorrect";
+                
+                // Passer à la question suivante après un délai plus long
+                setTimeout(() => {
+                    nextQuestion();
+                }, 2500);
+            }
+        }
+
+        // Passer à la question suivante
+        function nextQuestion() {
+            currentQuestion++;
+            
+            if (currentQuestion < questions.length) {
+                showQuestion();
+            } else {
+                // Fin du niveau
+                showCompletionScreen();
+            }
+        }
+
+        // Afficher l'écran de fin
+        function showCompletionScreen() {
+            quizArea.style.display = 'none';
+            completionScreen.style.display = 'block';
+            
+            // Afficher le score
+            scoreDisplay.textContent = `Score: ${score}/${questions.length}`;
+            
+            // Vérifier et mettre à jour le meilleur score
+            const currentBest = bestScores[currentLevel] || 0;
+            if (score > currentBest) {
+                bestScores[currentLevel] = score;
+                localStorage.setItem('bibleQuizBestScores', JSON.stringify(bestScores));
+                bestScoreDisplay.textContent = `Nouveau meilleur score: ${score}/${questions.length} 🏆`;
+            } else {
+                bestScoreDisplay.textContent = `Meilleur score: ${currentBest}/${questions.length}`;
+            }
+            
+            // Effets visuels
+            createConfetti();
+            createFireworks();
+        }
+
+        // Recréer le niveau actuel
+        function restartLevel() {
+            startLevel(currentLevel);
+        }
+
+        // Passer au niveau suivant
+        function nextLevel() {
+            if (currentLevel < 10) {
+                startLevel(currentLevel + 1);
+            } else {
+                // Retour à la sélection de niveau si on est au niveau max
+                levelSelector.style.display = 'block';
+                completionScreen.style.display = 'none';
+            }
+        }
+
+        // Créer des effets de confettis
+        function createConfetti() {
+            const colors = ['#f44336', '#e91e63', '#9c27b0', '#673ab7', '#3f51b5', '#2196f3', '#03a9f4', '#00bcd4', '#009688', '#4caf50', '#8bc34a', '#cddc39', '#ffeb3b', '#ffc107', '#ff9800', '#ff5722'];
+            
+            for (let i = 0; i < 150; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = `${Math.random() * 100}%`;
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDuration = `${1 + Math.random() * 3}s`;
+                confetti.style.width = `${5 + Math.random() * 10}px`;
+                confetti.style.height = confetti.style.width;
+                confetti.style.opacity = Math.random();
+                
+                completionScreen.appendChild(confetti);
+                
+                // Supprimer le confetti après l'animation
+                setTimeout(() => {
+                    confetti.remove();
+                }, 3000);
+            }
+        }
+
+        // Créer des effets de feux d'artifice
+        function createFireworks() {
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+            
+            for (let i = 0; i < 30; i++) {
+                const firework = document.createElement('div');
+                firework.className = 'firework';
+                firework.style.left = `${10 + Math.random() * 80}%`;
+                firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                firework.style.animationDuration = `${0.5 + Math.random() * 1}s`;
+                
+                completionScreen.appendChild(firework);
+                
+                // Supprimer le feu d'artifice après l'animation
+                setTimeout(() => {
+                    firework.remove();
+                }, 1000);
+            }
+        }
+
+        // Mélanger un tableau (algorithme de Fisher-Yates)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+    </script>
+</body>
+</html>
